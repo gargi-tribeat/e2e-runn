@@ -2,52 +2,35 @@ package main
 
 import (
 	"encoding/json"
-	"math/rand"
+	"fmt"
 	"net/http"
 	"sync"
-	"time"
 
 	"github.com/go-chi/chi/v5"
 )
 
 var jokes = []string{
-	"I'm reading a book on anti-gravity. It’s impossible to put down!",
-	"Did you hear about the restaurant on the moon? Great food, no atmosphere.",
-	"Why don’t skeletons fight each other? They don’t have the guts.",
+	"パンはパンでも食べられないパンは？ → フライパン！",
+	"布団が吹っ飛んだ！",
+	"トイレに行っといれ。",
+	"犬がいるんだワン。",
+	"象がぞうっとする話。",
 }
 
 var mu sync.Mutex
 
 func main() {
+	fmt.Println("Starting server on :8080")
 	http.ListenAndServe(":8080", NewRouter())
 }
 
 func NewRouter() http.Handler {
 	r := chi.NewRouter()
-	r.Get("/joke", getJokeHandler)
-	r.Post("/joke", postJokeHandler)
+	r.Get("/joke", getJokesHandler)
 	return r
 }
 
-func getJokeHandler(w http.ResponseWriter, r *http.Request) {
-	mu.Lock()
-	defer mu.Unlock()
-	rand.Seed(time.Now().UnixNano())
-	joke := jokes[rand.Intn(len(jokes))]
-	json.NewEncoder(w).Encode(map[string]string{"joke": joke})
-}
-
-func postJokeHandler(w http.ResponseWriter, r *http.Request) {
-	var body struct {
-		Joke string `json:"joke"`
-	}
-	if err := json.NewDecoder(r.Body).Decode(&body); err != nil || body.Joke == "" {
-		http.Error(w, "Invalid joke", http.StatusBadRequest)
-		return
-	}
-	mu.Lock()
-	jokes = append(jokes, body.Joke)
-	mu.Unlock()
-	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(map[string]string{"status": "received"})
+func getJokesHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(jokes)
 }

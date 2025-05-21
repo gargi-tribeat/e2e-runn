@@ -20,7 +20,7 @@ func TestRouter(t *testing.T) {
 	})
 	opts := []runn.Option{
 		runn.T(t),
-		runn.Book("testdata/books/login.yml"),
+		runn.Book("testdata/books/jokes_test.yaml"),
 		runn.Runner("req", ts.URL),
 		// runn.DBRunner("db", dbr),
 	}
