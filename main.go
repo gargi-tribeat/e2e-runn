@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"sync"
 
 	"github.com/go-chi/chi/v5"
 )
@@ -16,8 +15,6 @@ var jokes = []string{
 	"犬がいるんだワン。",
 	"象がぞうっとする話。",
 }
-
-var mu sync.Mutex
 
 func main() {
 	fmt.Println("Starting server on :8080")
