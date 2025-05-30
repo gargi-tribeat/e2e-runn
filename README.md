@@ -27,7 +27,7 @@ go run main.go
 `curl` を使ってジョークを取得できます：
 
 ```bash
-curl http://localhost:8080/joke
+curl GET http://localhost:8080/joke
 ```
 
 ---
